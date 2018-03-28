@@ -1,0 +1,76 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Show transactions</title>
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <h1>Ethereum transactions stream test</h1>
+  <input placeholder="Ethereum address 0x..." value="0x4a1eade6b3780b50582344c162a547d04e4e8e4a"/>
+  <button onclick="subscribe(document.querySelector('input').value, document.querySelector('p'))">
+    subscribe
+  </button>
+  <button onclick="stop(document.querySelector('p'))">
+    stop
+  </button>
+  <button onclick="clearOutput(document.querySelector('p'))">
+    clear output
+  </button>
+  <p></p>
+
+  <script src="../build/ethereum-transaction-stream.js"></script>
+  <script>
+    var EthTS = window.EthTS;
+    var ets = EthTS.create(EthTS.PROVIDERS.EtherscanWS);
+
+    function write(container, line) {
+      container.appendChild(document.createTextNode(line));
+      container.appendChild(document.createElement('br'));
+    }
+
+    function clearOutput(container) {
+      while(container.firstChild){
+        container.removeChild(container.firstChild);
+      }
+    }
+
+    function stop(container) {
+      if (ets.streamInUse) {
+        ets.close()
+          .then(function() {
+            write(container, '[INFO] Old stream closed');
+          });
+      }
+    }
+
+    function subscribe(address, container) {
+      if (!address) {
+        return write(container, '[ERROR] Invalid address');
+      }
+
+      if (ets.streamInUse) {
+        return write(container, '[WARN] Stream in use. Stop it first!');
+      }
+
+      write(container, '[INFO] Opening a stream for ' + address);
+
+      ets.stream(address.trim())
+        .then(function(stream) {
+          return stream.subscribe(function(tx) {
+            write(container, '[TX] ' + JSON.stringify(tx));
+          });
+        })
+        .catch(function(error) {
+          write(container, '[ERROR] ' + error.message);
+        });
+    }
+  </script>
+</body>
+</html>
