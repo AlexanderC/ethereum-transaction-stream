@@ -9,13 +9,25 @@
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
   <![endif]-->
+
+  <style>
+    p {
+      padding: 50px;
+      word-break: break-all;
+    }
+  </style>
 </head>
 
 <body>
   <h1>Ethereum transactions stream test</h1>
   <input placeholder="Ethereum address 0x..." value="0x4a1eade6b3780b50582344c162a547d04e4e8e4a"/>
+  <select onchange="selectNetwork(document.querySelector('select').value, document.querySelector('p'))">
+      <option selected value="mainnet">mainnet</option>
+      <option value="ropsten">ropsten</option>
+      <option value="rinkeby">rinkeby</option>
+    </select>
   <button onclick="subscribe(document.querySelector('input').value, document.querySelector('p'))">
-    subscribe
+    start
   </button>
   <button onclick="stop(document.querySelector('p'))">
     stop
@@ -28,11 +40,12 @@
   <script src="../build/ethereum-transaction-stream.js"></script>
   <script>
     var EthTS = window.EthTS;
-    var ets = EthTS.create(EthTS.PROVIDERS.EtherscanWS);
+    var ets = EthTS.create(EthTS.PROVIDERS.Etherscan);
 
     function write(container, line) {
       container.appendChild(document.createTextNode(line));
-      container.appendChild(document.createElement('br'));
+      container.appendChild(document.createElement('hr'));
+      window.scrollTo(0, document.body.scrollHeight);
     }
 
     function clearOutput(container) {
@@ -45,9 +58,18 @@
       if (ets.streamInUse) {
         ets.close()
           .then(function() {
-            write(container, '[INFO] Old stream closed');
+            write(container, '[INFO] Stream closed');
           });
       }
+    }
+
+    function selectNetwork(network, container) {
+      if (ets.streamInUse) {
+        return write(container, '[WARN] Stream in use. Stop it first!');
+      }
+
+      ets.configure('network',network);
+      write(container, '[INFO] Change network to ' + network);
     }
 
     function subscribe(address, container) {
@@ -64,6 +86,11 @@
       ets.stream(address.trim())
         .then(function(stream) {
           return stream.subscribe(function(tx) {
+            // because it's ugly
+            if (tx.input) {
+              tx.input = tx.input.substr(0, 10) + '...';
+            }
+
             write(container, '[TX] ' + JSON.stringify(tx));
           });
         })

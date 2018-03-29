@@ -8,7 +8,7 @@ class EtherscanWS extends EtherscanProvider {
   constructor(...args) {
     super(...args);
 
-    this.connection = ConnectionFactory.create(this.config);
+    this._connection = null;
   }
 
   /**
@@ -25,8 +25,21 @@ class EtherscanWS extends EtherscanProvider {
    */
   async close() {
     await this.connection.close();
+    
+    this._connection = null;
 
     return super.close();
+  }
+
+  /**
+   * Get ws connection
+   */
+  get connection() {
+    if (!this._connection) {
+      this._connection = ConnectionFactory.create(this.config);
+    }
+
+    return this._connection;
   }
 }
 

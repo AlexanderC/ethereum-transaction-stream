@@ -7,7 +7,8 @@
     "test": "$(npm bin)/mocha  -t 100000",
     "test:v": "DEBUG=test:*,ets:* npm test",
     "test:vvv": "DEBUG=* npm test",
-    "build": "$(npm bin)/webpack --config webpack.config.js"
+    "build": "$(npm bin)/webpack --config webpack.config.js",
+    "build:watch": "$(npm bin)/webpack --watch --mode 'development' --config webpack.config.js"
   },
   "repository": {
     "type": "git",

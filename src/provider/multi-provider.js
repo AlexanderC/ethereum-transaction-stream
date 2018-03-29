@@ -56,6 +56,17 @@ class MultiProvider extends Provider {
   }
 
   /**
+   * @inheritDoc
+   */
+  configure(...args) {
+    for (let provider of this.providers) {
+      provider.configure(...args);
+    }
+
+    return this;
+  }
+
+  /**
    * Build observable
    * @ref http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#static-method-merge
    */

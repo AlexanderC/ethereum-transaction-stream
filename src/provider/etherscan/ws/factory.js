@@ -1,5 +1,5 @@
 const NativeConnection = require('./native');
-const MockConnection = require('./mock');
+const PolyfillConnection = require('./polyfill');
 
 class Factory {
   /**
@@ -11,7 +11,7 @@ class Factory {
       return new NativeConnection(config);
     }
 
-    return new MockConnection(config);
+    return new PolyfillConnection(config);
   }
 }
 

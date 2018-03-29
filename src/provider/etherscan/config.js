@@ -11,9 +11,12 @@ class Config {
   /**
    * Lis transactions
    * @param {string} address 
+   * @param {number} startblock
+   * @param {number} endblock
+   * @param {string} sort
    * @ref https://etherscan.io/apis#accounts
    */
-  listTx(address, startblock = 0, endblock = 999999999999, sort = 'desc') {
+  listTx(address, startblock, endblock, sort = 'desc') {
     return {
       url: '',
       method: 'GET',
@@ -85,6 +88,13 @@ class Config {
   }
 
   /**
+   * WS polyfill pooling interval
+   */
+  get wsPoolingInterval() {
+    return Config.DEFAULT_WS_POOLING_INTERVAL;
+  }
+
+  /**
    * Rinkeby network
    */
   static get RINKEBY() {
@@ -103,6 +113,13 @@ class Config {
    */
   static get MAINNET() {
     return 'mainnet';
+  }
+
+  /**
+   * Default ping
+   */
+  static get DEFAULT_WS_POOLING_INTERVAL() {
+    return 2000;
   }
 
   /**

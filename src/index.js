@@ -5,6 +5,7 @@ const MultiProvider = require('./provider/multi-provider');
 const EtherscanHTTP = require('./provider/etherscan/http');
 const EtherscanWS = require('./provider/etherscan/ws');
 const StreamInUseError = require('./error/stream-in-use');
+const EtherscanConfig = require('./provider/etherscan/config');
 
 class EthTS {
   /**
@@ -13,6 +14,16 @@ class EthTS {
   constructor(...providers) {
     this.providers = providers;
     this.unitOfWork = new MultiProvider(this.providers);
+  }
+
+  /**
+   * Configure providers.
+   * Alias to stream.configure()
+   */
+  configure(key, value) {
+    this.unitOfWork.configure(key, value);
+
+    return this;
   }
 
   /**
@@ -72,6 +83,13 @@ class EthTS {
     }
 
     return new this(...providerInstances);
+  }
+
+  /**
+   * Etherscan configuration constructor
+   */
+  static get EtherscanConfig() {
+    return EtherscanConfig;
   }
 
   /**

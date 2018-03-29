@@ -5,15 +5,6 @@ const MissingProviderContextError = require('./error/missing-provider-context');
 
 class HTTP extends Provider {
   /**
-   * @param {string} baseURL 
-   */
-  constructor(baseURL = null) {
-    super();
-
-    this.baseURL = baseURL;
-  }
-
-  /**
    * Do a request
    * @param {string} url 
    * @param {string} method 
@@ -60,9 +51,13 @@ class HTTP extends Provider {
    * Get client
    */
   get client() {
-    const { baseURL } = this;
+    const { baseURL } = this.config;
 
-    return axios.create({ baseURL });
+    if (baseURL) {
+      return axios.create({ baseURL });
+    }
+
+    return axios.create();
   }
 }
 

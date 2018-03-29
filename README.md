@@ -23,7 +23,13 @@ npm install github:AlexanderC/ethereum-transaction-stream
 const EthTS = require('ethereum-transaction-stream');
 
 (async (EthTS) => {
-  const ets = EthTS.create(EthTS.PROVIDERS.Etherscan);
+  const ets = EthTS
+      .create(EthTS.PROVIDERS.EtherscanWS)
+
+      // EthTS.EtherscanConfig.MAINNET (default)
+      // EthTS.EtherscanConfig.ROPSTEN
+      // EthTS.EtherscanConfig.RINKEBY
+      .configure('network', EthTS.EtherscanConfig.ROPSTEN);
 
   // creates a new stream
   const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');

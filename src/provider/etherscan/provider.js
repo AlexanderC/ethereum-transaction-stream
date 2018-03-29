@@ -3,15 +3,6 @@ const Config = require('./config');
 
 class EtherscanProvider extends HTTP {
   /**
-   * @param {Config} config 
-   */
-  constructor(config) {
-    super();
-
-    this.config = config;
-  }
-
-  /**
    * Creates a new Etherscan client
    * @param {string} network 
    * @param {string} apiKey 

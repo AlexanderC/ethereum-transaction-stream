@@ -6,7 +6,11 @@ const NotImplementedError = require('./error/not-implemented');
 const ProviderContextSetError = require('./error/provider-context-already-set');
 
 class Provider {
-  constructor() {
+  /**
+   * @param {*} config 
+   */
+  constructor(config = {}) {
+    this.config = config;
     this._observable = null;
     this._context = null;
     this._onContextActions = [];
@@ -95,10 +99,6 @@ class Provider {
    * @deprecated
    */
   async waitAll() {
-    console.warn(
-      'Be aware- Provider.waitAll() might hang the process!'
-    );
-
     debug('wait all items');
 
     return new Promise((resolve, reject) => {
@@ -110,6 +110,21 @@ class Provider {
         () => resolve(accumulator)
       );
     });
+  }
+
+  /**
+   * Configure provider
+   * @param {string} key 
+   * @param {*} value 
+   */
+  configure(key, value) {
+    if (this.hasContext) {
+      throw new ProviderContextSetError();
+    }
+
+    this.config[key] = value;
+
+    return this;
   }
 
   /**
