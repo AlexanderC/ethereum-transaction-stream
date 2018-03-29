@@ -1,6 +1,6 @@
 {
   "name": "ethereum-transaction-stream",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Relatime Ethereum transactions tracking library",
   "main": "src/index.js",
   "keywords": [
