@@ -6,7 +6,7 @@ Relatime Ethereum transactions tracking library
 # Installation
 
 ```bash
-npm install github:AlexanderC/ethereum-transaction-stream
+npm install ethereum-transaction-stream
 ```
 
 # Features
