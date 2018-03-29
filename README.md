@@ -68,3 +68,11 @@ For more examples check out `/example` folder.
 ```bash
 npm run test # npm run test:v|vvv for debugging
 ```
+
+# Support development
+
+I really love open source, however i do need your help to
+keep the library up to date. There are several ways to do it:
+open issues, submit PRs, share the library w/ community or simply-
+
+<a href="https://etherdonation.com/d?to=0x4a1eade6b3780b50582344c162a547d04e4e8e4a" target="_blank" title="Donate ETH"><img src="https://etherdonation.com/i/btn/donate-btn.png" alt="Donate ETH"/></a>
