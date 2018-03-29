@@ -6,8 +6,8 @@ module.exports = {
   entry: './src/index.js',
   mode: process.env.ENV || 'production',
   output: {
-    filename: `${ pkg.name }.js`,
-    path: path.resolve(__dirname, 'build'),
+    filename: 'browser.js',
+    path: path.resolve(__dirname, 'dist'),
     library: 'EthTS',
     libraryTarget: 'umd',
   },

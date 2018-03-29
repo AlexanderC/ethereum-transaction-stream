@@ -1,5 +1,3 @@
-/build/ethereum-transaction-stream.js
-
 # Created by https://www.gitignore.io/api/yeoman,node,webstorm,visualstudiocode,mean,macos,linux
 
 ### Linux ###
@@ -49,7 +47,6 @@ Temporary Items
 ### MEAN.Anglar Stack ###
 ## Angular ##
 # compiled output
-/dist
 /tmp
 /app/**/*.js
 /app/**/*.js.map

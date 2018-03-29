@@ -13,7 +13,7 @@ if (process.env.BROWSER) {
   global.XMLHttpRequest = XMLHttpRequest;
   global.WebSocket = require('ws');
 
-  EthTS = require(`../build/${ pkg.name }.js`);
+  EthTS = require(`../dist/browser.js`);
 }
 
 process.on('unhandledRejection', (error) => {

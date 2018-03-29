@@ -18,6 +18,7 @@ npm install ethereum-transaction-stream
 # Usage
 
 ```javascript
+// import EthTS from 'ethereum-transaction-stream/dist/browser';
 // import EthTS from 'ethereum-transaction-stream';
 // const { EthTS } = window;
 const EthTS = require('ethereum-transaction-stream');
