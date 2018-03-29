@@ -1,8 +1,12 @@
 {
   "name": "ethereum-transaction-stream",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Relatime Ethereum transactions tracking library",
   "main": "src/index.js",
+  "keywords": [
+    "ethereum", "etherscan", "tx", "transactions", 
+    "ws", "listen", "eth", "library"
+  ],
   "scripts": {
     "test": "$(npm bin)/mocha  -t 100000",
     "test:v": "DEBUG=test:*,ets:* npm test",
