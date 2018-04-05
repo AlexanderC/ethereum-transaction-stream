@@ -4,12 +4,14 @@ const debug = require('debug')('ets:provider');
 const MissingProviderContextError = require('./error/missing-provider-context');
 const NotImplementedError = require('./error/not-implemented');
 const ProviderContextSetError = require('./error/provider-context-already-set');
+const Middleware = require('./middleware');
 
 class Provider {
   /**
    * @param {*} config 
    */
   constructor(config = {}) {
+    this.middleware = new Middleware();
     this.config = config;
     this._observable = null;
     this._context = null;
@@ -56,6 +58,7 @@ class Provider {
       this._observable = null;
       this._context = null;
       this._onContextActions = [];
+      this.middleware = new Middleware();
     }
 
     return this;
@@ -71,6 +74,9 @@ class Provider {
     if (!this.hasContext) {
       throw new MissingProviderContextError();
     }
+
+    // @todo check effectiveness
+    items = await this.middleware.dispatch(this, ...items);
 
     for (let item of items) {
       this._context.next(item);
@@ -128,6 +134,11 @@ class Provider {
   }
 
   /**
+   * Function triggered on context creation
+   */
+  async onContext() {}
+
+  /**
    * Get observable instance
    */
   get observable() {
@@ -147,8 +158,10 @@ class Provider {
   _fillContext() {
     debug('fill the context');
 
-    this._observable = Rx.Observable.create((observer) => {
+    this._observable = Rx.Observable.create(async (observer) => {
       this._context = observer;
+
+      await this.onContext();
 
       debug('create runtime domain');
 

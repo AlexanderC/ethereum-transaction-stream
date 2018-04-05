@@ -30,7 +30,10 @@ const EthTS = require('ethereum-transaction-stream');
       // EthTS.EtherscanConfig.MAINNET (default)
       // EthTS.EtherscanConfig.ROPSTEN
       // EthTS.EtherscanConfig.RINKEBY
-      .configure('network', EthTS.EtherscanConfig.ROPSTEN);
+      .configure('network', EthTS.EtherscanConfig.ROPSTEN)
+
+      // Include internal txs (e.g. ERC20 token transfer)
+      .configure('includeInternal', true);
 
   // creates a new stream
   const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
@@ -61,6 +64,8 @@ const EthTS = require('ethereum-transaction-stream');
   console.log('Transactions received:', txs.length);
 })(EthTS);
 ```
+
+> Enabling `includeInternal` option might slow down the performance considerably
 
 For more examples check out `/example` folder.
 

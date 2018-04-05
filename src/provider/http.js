@@ -12,6 +12,13 @@ class HTTP extends Provider {
    * @param {*} data 
    */
   async rawRequest(url, method = 'GET', params = {}, data = {}) {
+    const { baseURL } = this.client.defaults;
+
+    const debugInfo = `method=${ method } baseURL=${ baseURL } url=${ url }`
+      + ` params=${ JSON.stringify(params) } data=${ JSON.stringify(data) }`;
+
+    debug(`request: ${ debugInfo }`);
+
     return this.client.request({ url, method, params, data });
   }
 
@@ -30,10 +37,14 @@ class HTTP extends Provider {
       await this.push(...items);
       await this.close();
     } catch (error) {
-      debug(
-        'context has been closed before items arrival',
-        error.message
-      );
+      if (error instanceof MissingProviderContextError) {
+        debug(
+          'context has been closed before items arrival',
+          error.message
+        );
+      }
+      
+      throw error;
     }
 
     return this;

@@ -35,14 +35,19 @@ describe('EthTS', function() {
     let error1, error2;
     
     try {
-      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
+      const stream = await ets.stream('0x546ccFd3dCC18732636317CE09fF5213C43AFb06');
       txs1 = await stream.waitAll();
+
+      for (let tx of txs1) {
+        tx.input = '0x...';
+        debug('received tx', JSON.stringify(tx));
+      }
     } catch (e) {
       error1 = e;
     }
 
     try {
-      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
+      const stream = await ets.stream('0x546ccFd3dCC18732636317CE09fF5213C43AFb06');
       txs2 = await stream.waitAll();
     } catch (e) {
       error2 = e;
@@ -133,6 +138,7 @@ describe('EthTS', function() {
       const stream = await ets.stream(address);
 
       await stream.subscribe((tx) => {
+        tx.input = '0x...';
         debug('received tx', JSON.stringify(tx));
 
         if (tx.from !== address && tx.to !== address) {
@@ -171,6 +177,7 @@ describe('EthTS', function() {
       streamInUseBeforeStatus = ets.streamInUse;
 
       await stream.subscribe((tx) => {
+        tx.input = '0x...';
         debug('received tx', JSON.stringify(tx));
       });
 

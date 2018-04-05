@@ -3,13 +3,39 @@ class Config {
    * @param {string} network 
    * @param {string} apiKey
    */
-  constructor(network = Config.MAINNET, apiKey = Config.DEFAULT_API_KEY) {
+  constructor(
+    network = Config.MAINNET,
+    apiKey = Config.DEFAULT_API_KEY,
+    includeInternal = Config.DEFAULT_INCLUDE_INTERNAL
+  ) {
     this.network = network;
     this.apiKey = apiKey;
+    this.includeInternal = includeInternal;
   }
 
   /**
-   * Lis transactions
+   * List internal transactions
+   * @param {*} tx 
+   * @ref https://etherscan.io/apis#accounts
+   */
+  listInternalTx(tx) {
+    const txhash = tx.hash;
+
+    return {
+      url: '',
+      method: 'GET',
+      params: {
+        module: 'account',
+        action: 'txlistinternal',
+        txhash: tx.hash,
+        apikey: this.apiKey,
+      },
+      data: {},
+    };
+  }
+
+  /**
+   * List transactions
    * @param {string} address 
    * @param {number} startblock
    * @param {number} endblock
@@ -120,6 +146,13 @@ class Config {
    */
   static get DEFAULT_WS_POOLING_INTERVAL() {
     return 2000;
+  }
+
+  /**
+   * Default internal transactions include
+   */
+  static get DEFAULT_INCLUDE_INTERNAL() {
+    return false;
   }
 
   /**

@@ -121,9 +121,7 @@ class NativeConnection extends Connection {
     const data = JSON.parse(msg);
 
     if (data.result && Array.isArray(data.result)) {
-      for (let item of data.result) {
-        context.push(item);
-      }
+      await context.push(...data.result);
     }
 
     return this;
