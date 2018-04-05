@@ -32,7 +32,7 @@ const EthTS = require('ethereum-transaction-stream');
       // EthTS.EtherscanConfig.RINKEBY
       .configure('network', EthTS.EtherscanConfig.ROPSTEN)
 
-      // Include internal txs (e.g. ERC20 token transfer)
+      // Include internal txs (e.g. proxy value to another address)
       .configure('includeInternal', true);
 
   // creates a new stream
@@ -74,6 +74,11 @@ For more examples check out `/example` folder.
 ```bash
 npm run test # npm run test:v|vvv for debugging
 ```
+
+# Roadmap
+
+- [ ] Add ERC20 tokens transfer fetching
+- [ ] Add custom events processing
 
 # Support development
 
