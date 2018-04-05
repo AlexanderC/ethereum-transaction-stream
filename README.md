@@ -25,6 +25,10 @@ const EthTS = require('ethereum-transaction-stream');
 
 (async (EthTS) => {
   const ets = EthTS
+
+      // EthTS.PROVIDERS.Etherscan
+      // EthTS.PROVIDERS.EtherscanWS
+      // EthTS.PROVIDERS.EtherscanHTTP
       .create(EthTS.PROVIDERS.EtherscanWS)
 
       // EthTS.EtherscanConfig.MAINNET (default)
@@ -35,15 +39,15 @@ const EthTS = require('ethereum-transaction-stream');
       // Include internal txs (e.g. proxy value to another address)
       .configure('includeInternal', true);
 
-  // creates a new stream
+  // Creates a new stream
   const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
 
   console.log('in use:', ets.streamInUse); // false
 
   const txs = [];
 
-  // subscribes to the stream
-  // there is a "const txs = await stream.waitAll()" method
+  // Subscribes to the stream.
+  // There is a "const txs = await stream.waitAll()" method
   // however you should avoid it- it might hang your process (e.g. with ws provider)
   await stream.subscribe((tx) => {
     txs.push(tx);
