@@ -39,8 +39,10 @@ const EthTS = require('ethereum-transaction-stream');
       // Include internal txs (e.g. proxy value to another address)
       .configure('includeInternal', true);
 
-  // Creates a new stream
-  const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
+  // Creates a new stream.
+  // Note that "startblock" and "endblock" options are only available for "EtherscanHTTP" provider.
+  // Important: the result will INCLUDE transactions from the "startblock"
+  const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a'/*, startblock, endblock*/);
 
   console.log('in use:', ets.streamInUse); // false
 

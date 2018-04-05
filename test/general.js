@@ -30,32 +30,47 @@ describe('Generic', function() {
 describe('EthTS', function() {
   it('check Etherscan HTTP', async function() {
     const ets = EthTS.create(EthTS.PROVIDERS.EtherscanHTTP);
+    let startBlock = 0;
 
-    let txs1, txs2;
-    let error1, error2;
+    let txs1, txs2, txs3;
+    let error1, error2, error3;
     
     try {
-      const stream = await ets.stream('0x546ccFd3dCC18732636317CE09fF5213C43AFb06');
+      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a', startBlock);
       txs1 = await stream.waitAll();
 
       for (let tx of txs1) {
         tx.input = '0x...';
         debug('received tx', JSON.stringify(tx));
+
+        // update start block
+        if (parseInt(tx.blockNumber) > startBlock) {
+          startBlock = parseInt(tx.blockNumber);
+        }
       }
     } catch (e) {
       error1 = e;
     }
 
     try {
-      const stream = await ets.stream('0x546ccFd3dCC18732636317CE09fF5213C43AFb06');
+      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
       txs2 = await stream.waitAll();
     } catch (e) {
       error2 = e;
     }
+
+    try {
+      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a', startBlock + 1);
+      txs3 = await stream.waitAll();
+    } catch (e) {
+      error3 = e;
+    }
     
     assert.notInstanceOf(error1, Error, 'Failed to retrieve transactions first time');
     assert.notInstanceOf(error2, Error, 'Failed to retrieve transactions second time');
+    assert.notInstanceOf(error3, Error, 'Failed to retrieve transactions starting from last block');
     assert.equal(txs1.length, txs2.length, 'Number of transactions differs');
+    assert.equal(txs3.length, 0, 'There must be no transactions after the end block');
   });
 
   it('check Etherscan WS', async function() {
