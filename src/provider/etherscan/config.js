@@ -6,11 +6,13 @@ class Config {
   constructor(
     network = Config.MAINNET,
     apiKey = Config.DEFAULT_API_KEY,
-    includeInternal = Config.DEFAULT_INCLUDE_INTERNAL
+    includeInternal = Config.DEFAULT_INCLUDE_INTERNAL,
+    includeLogs = Config.DEFAULT_INCLUDE_LOGS
   ) {
     this.network = network;
     this.apiKey = apiKey;
     this.includeInternal = includeInternal;
+    this.includeLogs = includeLogs;
   }
 
   /**
@@ -57,6 +59,54 @@ class Config {
       },
       data: {},
     };
+  }
+
+  /**
+   * List logs
+   * @param {string} address 
+   * @param {number} fromBlock
+   * @param {number} toBlock
+   * @param {Array} topics
+   * @ref https://etherscan.io/apis#accounts
+   */
+  listLogs(address, fromBlock, toBlock, topics = []) {
+    const result = {
+      url: '',
+      method: 'GET',
+      params: {
+        address,
+        fromBlock,
+        toBlock,
+        module: 'logs',
+        action: 'getLogs',
+        apikey: this.apiKey,
+      },
+      data: {},
+    };
+
+    for (let i in topics) {
+      result.params[`topic${ i }`] = topics[i];
+    }
+
+    return result;
+  }
+
+  /**
+   * List logs for ERC20 token transfers
+   * @param {string} address 
+   * @param {number} fromBlock
+   * @param {number} toBlock
+   * @param {boolean} mintOnly
+   * @ref https://etherscan.io/apis#accounts
+   */
+  listERC20Transfers(address, fromBlock, toBlock, mintOnly = false) {
+    const topics = [ Config.ERC20_TRANSFER_ABI ];
+
+    if (mintOnly) {
+      topics.push(Config.ROOT_ADDRESS);
+    }
+
+    return this.listLogs(address, fromBlock, toBlock, topics);
   }
 
   /**
@@ -121,6 +171,20 @@ class Config {
   }
 
   /**
+   * Root address
+   */
+  static get ROOT_ADDRESS() {
+    return '0x0000000000000000000000000000000000000000000000000000000000000000';
+  }
+
+  /**
+   * ERC20 tokens TRANSFER() event ABI
+   */
+  static get ERC20_TRANSFER_ABI() {
+    return '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+  }
+
+  /**
    * Rinkeby network
    */
   static get RINKEBY() {
@@ -152,6 +216,13 @@ class Config {
    * Default internal transactions include
    */
   static get DEFAULT_INCLUDE_INTERNAL() {
+    return false;
+  }
+
+  /**
+   * Default logs include
+   */
+  static get DEFAULT_INCLUDE_LOGS() {
     return false;
   }
 

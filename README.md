@@ -14,6 +14,8 @@ npm install ethereum-transaction-stream
 - Works in Node.js and browsers (incl. websocket fallback)
 - Fetches historical transactions besides realtime tracking
 - Handles transactions tracking for testnet (despite lack of Etherscan support)
+- Possibility to include internal transactions (per tx)
+- Possibility to include ERC20 tokens minting logs (per tx)
 
 # Usage
 
@@ -37,12 +39,25 @@ const EthTS = require('ethereum-transaction-stream');
       .configure('network', EthTS.EtherscanConfig.ROPSTEN)
 
       // Include internal txs (e.g. proxy value to another address)
-      .configure('includeInternal', true);
+      // Default: false
+      .configure('includeInternal', true)
+
+      // Include logs (e.g. token minting)
+      // Important: this is currently available for EtherscanHTTP only
+      // Default: false
+      .configure('includeLogs', true);
 
   // Creates a new stream.
-  // Note that "startblock" and "endblock" options are only available for "EtherscanHTTP" provider.
+  // Note that "startblock", "endblock", "ERC20TokenAddress" and "mintOnly" options
+  // are only available for "EtherscanHTTP" provider. By including "ERC20TokenAddress"
+  // there will be included transactions for ERC20 token only and enabling "mintOnly"
+  // option will result in leaving only token minting events.
+  // Important: "ERC20TokenAddress" and "mintOnly" options are available only when "includeLogs" enabled
   // Important: the result will INCLUDE transactions from the "startblock"
-  const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a'/*, startblock, endblock*/);
+  const stream = await ets.stream(
+    '0x4a1eade6b3780b50582344c162a547d04e4e8e4a'
+    /*, startblock, endblock, ERC20TokenAddress, mintOnly */
+  );
 
   console.log('in use:', ets.streamInUse); // false
 
@@ -85,6 +100,7 @@ npm run test # npm run test:v|vvv for debugging
 
 - [ ] Add ERC20 tokens transfer fetching
 - [ ] Add custom events processing
+- [ ] Include logs into the native WS provider
 
 # Support development
 

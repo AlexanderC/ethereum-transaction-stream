@@ -1,6 +1,7 @@
 const { assert } = require('chai');
 const { XMLHttpRequest } = require('xmlhttprequest');
 const WebSocket = require('ws');
+const Web3 = require('web3');
 const debug = require('debug')('test:general');
 const pkg = require('../package.json');
 let EthTS = require('../src/index');
@@ -13,7 +14,7 @@ if (process.env.BROWSER) {
   global.XMLHttpRequest = XMLHttpRequest;
   global.WebSocket = require('ws');
 
-  EthTS = require(`../dist/browser.js`);
+  EthTS = require('../dist/browser.js');
 }
 
 process.on('unhandledRejection', (error) => {
@@ -29,19 +30,36 @@ describe('Generic', function() {
 
 describe('EthTS', function() {
   it('check Etherscan HTTP', async function() {
-    const ets = EthTS.create(EthTS.PROVIDERS.EtherscanHTTP);
+    const ets = EthTS.create(EthTS.PROVIDERS.EtherscanHTTP)
+      .configure('includeLogs', true);
+    
     let startBlock = 0;
-
+    let nonMintEvents = 0;
     let txs1, txs2, txs3;
     let error1, error2, error3;
     
     try {
-      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a', startBlock);
+      const stream = await ets.stream(
+        '0x546ccFd3dCC18732636317CE09fF5213C43AFb06', // FundFantasy ICO
+        startBlock,
+        9999999999999999999999,
+        '0xbf5496122cf1bb778e0cbe5eab936f2be5fc0940', // FundToken ERC20
+        true // include only minting events
+      );
       txs1 = await stream.waitAll();
 
       for (let tx of txs1) {
         tx.input = '0x...';
+        const [ event ] = tx.$logs;
         debug('received tx', JSON.stringify(tx));
+
+        if (event) {
+          debug('mint ERC20', event.topics[2], '=', Web3.utils.fromWei(event.data));
+
+          if (event.topics[1] !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
+            nonMintEvents++;
+          }
+        }
 
         // update start block
         if (parseInt(tx.blockNumber) > startBlock) {
@@ -53,14 +71,14 @@ describe('EthTS', function() {
     }
 
     try {
-      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a');
+      const stream = await ets.stream('0x546ccFd3dCC18732636317CE09fF5213C43AFb06');
       txs2 = await stream.waitAll();
     } catch (e) {
       error2 = e;
     }
 
     try {
-      const stream = await ets.stream('0x4a1eade6b3780b50582344c162a547d04e4e8e4a', startBlock + 1);
+      const stream = await ets.stream('0x546ccFd3dCC18732636317CE09fF5213C43AFb06', startBlock + 1);
       txs3 = await stream.waitAll();
     } catch (e) {
       error3 = e;
@@ -71,6 +89,7 @@ describe('EthTS', function() {
     assert.notInstanceOf(error3, Error, 'Failed to retrieve transactions starting from last block');
     assert.equal(txs1.length, txs2.length, 'Number of transactions differs');
     assert.equal(txs3.length, 0, 'There must be no transactions after the end block');
+    assert.equal(nonMintEvents, 0, 'There must be no non mint events returned');
   });
 
   it('check Etherscan WS', async function() {

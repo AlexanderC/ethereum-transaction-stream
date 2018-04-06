@@ -1,6 +1,6 @@
 {
   "name": "ethereum-transaction-stream",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "description": "Relatime Ethereum transactions tracking library",
   "main": "src/index.js",
   "keywords": [
@@ -48,6 +48,7 @@
     "babel-runtime": "^6.26.0",
     "chai": "^4.1.2",
     "mocha": "^5.0.4",
+    "web3": "^1.0.0-beta.33",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.12",
     "xmlhttprequest": "^1.8.0"

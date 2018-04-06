@@ -23,16 +23,10 @@ class HTTP extends Provider {
   }
 
   /**
-   * Do a request
-   * @param {string} url 
-   * @param {string} method 
-   * @param {*} params 
-   * @param {*} data 
+   * Try to push items and close connection
+   * @param {*} items 
    */
-  async request(url, method = 'GET', params = {}, data = {}) {
-    const response = await this.rawRequest(...arguments);
-    const items = await this.transform(response);
-
+  async tryPushAndClose(...items) {
     try {
       await this.push(...items);
       await this.close();
@@ -46,8 +40,31 @@ class HTTP extends Provider {
       
       throw error;
     }
-
+    
     return this;
+  }
+
+  /**
+   * Do request and handle consequences
+   * @param {*} args 
+   */
+  async handle(...args) {
+    const items = await this.request(...args);
+
+    return this.tryPushAndClose(...items);
+  }
+
+  /**
+   * Do a request
+   * @param {string} url 
+   * @param {string} method 
+   * @param {*} params 
+   * @param {*} data 
+   */
+  async request(url, method = 'GET', params = {}, data = {}) {
+    const response = await this.rawRequest(...arguments);
+    
+    return this.transform(response);
   }
 
   /**
