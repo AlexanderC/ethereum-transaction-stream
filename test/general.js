@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const { XMLHttpRequest } = require('xmlhttprequest');
 const WebSocket = require('ws');
-const Web3 = require('web3');
+const web3Utils = require('web3-utils');
 const debug = require('debug')('test:general');
 const pkg = require('../package.json');
 let EthTS = require('../src/index');
@@ -54,7 +54,7 @@ describe('EthTS', function() {
         debug('received tx', JSON.stringify(tx));
 
         if (event) {
-          debug('mint ERC20', event.topics[2], '=', Web3.utils.fromWei(event.data));
+          debug('mint ERC20', event.topics[2], '=', web3Utils.fromWei(event.data));
 
           if (event.topics[1] !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
             nonMintEvents++;

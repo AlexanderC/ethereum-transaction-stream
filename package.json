@@ -1,6 +1,6 @@
 {
   "name": "ethereum-transaction-stream",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "Relatime Ethereum transactions tracking library",
   "main": "src/index.js",
   "keywords": [
@@ -31,30 +31,31 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "debug": "^3.1.0",
+    "debug": "^4.1.1",
     "p-all": "^1.0.0",
-    "rxjs": "^5.5.8",
-    "ws": "^5.1.0"
+    "rxjs": "^6.4.0",
+    "rxjs-compat": "^6.4.0",
+    "ws": "^6.1.3"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-add-module-exports": "^1.0.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-modern-browsers": "^10.0.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-modern-browsers": "^11.0.1",
     "babel-preset-stage-3": "^6.24.1",
     "babel-runtime": "^6.26.0",
-    "chai": "^4.1.2",
-    "mocha": "^5.0.4",
-    "web3": "^1.0.0-beta.33",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.12",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "web3-utils": "^1.0.0-beta.41",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1",
     "xmlhttprequest": "^1.8.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^3.0.3",
-    "utf-8-validate": "^4.0.0"
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
   }
 }
